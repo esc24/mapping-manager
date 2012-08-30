@@ -87,7 +87,7 @@ def edit(request, status):
             'status' : 'Status: %s' % status,
             'title' : 'Edit Shard: %s' % shard,
             'detail' : 'Shard: %s' % shard,
-            'newshard' : reverse('new', kwargs={'status' : status})
+            'newshard' : reverse('new', kwargs={'status' : status}),
             'form' : form,
             'read_only' : READ_ONLY,
             'prefix_lookup' : mark_safe(
@@ -95,7 +95,7 @@ def edit(request, status):
             }) )
 
 def get_shard(shard, status, source):
-    print '2>>>>', shard, status
+    print '2>>>>', shard, status, source
     qstr = '''
         SELECT ?cfname ?unit ?canon_unit ?longname
         WHERE {
@@ -108,6 +108,7 @@ def get_shard(shard, status, source):
         }
     ''' % (shard, shard)
     results = query.run_query(qstr)
+    print '3>>>>', results
     return results
 
 def shards(request):
@@ -181,6 +182,7 @@ def list(request, status):
             FILTER( REGEX(str(?g), 'http://%s/') ) .
         }
     ''' % (status.lower(), )
+    print reportq
     results = query.run_query(reportq)
     itemlist = []
     count_results = get_counts_by_graph()
